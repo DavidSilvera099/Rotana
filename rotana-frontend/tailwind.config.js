@@ -10,7 +10,11 @@ export default {
     "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundColor: {
+        bg_blue_ufinet: 'bg-[#1360a0]'
+      },
+    },
   },
   darkMode: "class",
   plugins: [heroui()],
