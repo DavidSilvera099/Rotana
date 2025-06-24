@@ -1,7 +1,6 @@
 import sql from 'mssql';
 import dotenv from 'dotenv';
 
-// Cargar variables de entorno
 dotenv.config();
 
 const config = {
@@ -18,13 +17,13 @@ const config = {
       minVersion: 'TLSv1'
     },
     validateBulkLoadParameters: false,
-    connectTimeout: 3000, // Reducido a 3 segundos
-    requestTimeout: 3000, // Reducido a 3 segundos
-    connectionTimeout: 3000, // Reducido a 3 segundos
+    connectTimeout: 3000, 
+    requestTimeout: 3000, 
+    connectionTimeout: 3000, 
     pool: {
-      max: 20, // Aumentado para manejar más conexiones concurrentes
-      min: 5, // Aumentado para mantener más conexiones activas
-      idleTimeoutMillis: 15000, // Reducido para liberar conexiones inactivas más rápido
+      max: 20,
+      min: 5, 
+      idleTimeoutMillis: 15000,
       acquireTimeoutMillis: 3000,
       createTimeoutMillis: 3000,
       reapIntervalMillis: 1000,
@@ -42,8 +41,7 @@ const initializePool = async () => {
   try {
     pool = new sql.ConnectionPool(config);
     poolConnect = pool.connect();
-    
-    // Precalentar el pool creando algunas conexiones iniciales
+
     const warmupConnections = async () => {
       try {
         const promises = [];
@@ -62,7 +60,6 @@ const initializePool = async () => {
       setTimeout(initializePool, 3000);
     });
 
-    // Iniciar el precalentamiento después de la conexión inicial
     await poolConnect;
     await warmupConnections();
 
@@ -139,7 +136,7 @@ const readDB = async () => {
 };
 
 // Función genérica para obtener datos por ID
-const getDataById = async (id, fieldName) => {
+/*const getDataById = async (id, fieldName) => {
   try {
     const cacheKey = `${fieldName}_${id}`;
     const cachedData = cache.get(cacheKey);
@@ -181,6 +178,7 @@ const getDataById = async (id, fieldName) => {
     throw error;
   }
 };
+*/
 
 // Función genérica para actualizar datos con invalidación de caché
 const updateData = async (id, newValue, fieldName) => {
