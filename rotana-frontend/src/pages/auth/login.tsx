@@ -5,15 +5,16 @@ import { useState } from "react";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { Alert } from "@heroui/alert";
 
 type LoginStep = "email" | "password";
-
 
 export default function Login() {
   const [step, setStep] = useState<LoginStep>("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [alerError, setAlertError] = useState("");
   const navigate = useNavigate();
 
   const handleNext = () => {
@@ -29,15 +30,19 @@ export default function Login() {
 
   const handleLogin = async () => {
     if (!password.trim()) return;
-
+    setAlertError("");
     setLoading(true);
     try {
       //metodo de firebase para logearse por email y contraseña
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/dashboard");
-    } catch (error) {
-      console.error("Login error:", error);
-      // Aquí puedes agregar manejo de errores más específico
+    } catch (error: any) {
+      /* setAlertError(
+        error instanceof Error ? error.message : "Se produjo un error"
+      ); */
+        if (error.code === 'auth/invalid-credential') {
+            setAlertError('Credencial invalida')
+        }
     } finally {
       setLoading(false);
     }
@@ -104,7 +109,13 @@ export default function Login() {
                       }
                     }}
                   />
-
+                  {alerError && (
+                    <Alert
+                      color="danger"
+                      title="Error de inicio de sesion"
+                      description={alerError}
+                    ></Alert>
+                  )}
                   <Button
                     className="w-full bg-green-500 hover:bg-green-600 text-white font-medium flex items-center justify-center gap-2"
                     size="lg"
